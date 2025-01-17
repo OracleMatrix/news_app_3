@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:news_app_3_update/app/routes/app_pages.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:shimmer/shimmer.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 class NewsCard extends StatelessWidget {
   const NewsCard({
@@ -13,6 +15,13 @@ class NewsCard extends StatelessWidget {
 
   final dynamic article;
   final bool isRTL;
+  String truncateToThreeWords(String text) {
+    List<String> words = text.split(' ');
+    if (words.length > 3) {
+      return '${words.take(3).join(' ')}...';
+    }
+    return text;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -56,8 +65,13 @@ class NewsCard extends StatelessWidget {
                     );
                   },
                   progressIndicatorBuilder: (context, url, progress) => Center(
-                    child: CircularProgressIndicator(
-                      value: progress.progress,
+                    child: Shimmer.fromColors(
+                      baseColor: Colors.grey.shade800,
+                      highlightColor: Colors.grey.shade600,
+                      child: Icon(
+                        Icons.broken_image_rounded,
+                        size: 50,
+                      ),
                     ),
                   ),
                 ),
@@ -95,7 +109,10 @@ class NewsCard extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        article.source?.name ?? 'Unknown Source',
+                        truncateToThreeWords(
+                            article.source?.name ?? 'Unknown Source'),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                           fontSize: 12,
                           color: Colors.grey.shade600,
@@ -104,7 +121,7 @@ class NewsCard extends StatelessWidget {
                       ),
                       Text(
                         article.publishedAt != null
-                            ? '${article.publishedAt!.day}/${article.publishedAt!.month}/${article.publishedAt!.year} | ${article.publishedAt!.hour}:${article.publishedAt!.minute}'
+                            ? timeago.format(article.publishedAt)
                             : 'Unknown Date',
                         style: TextStyle(
                           fontSize: 12,

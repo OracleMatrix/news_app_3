@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:news_app_3_update/app/data/Models/get_all_news_model.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:photo_view/photo_view.dart';
+import 'package:shimmer/shimmer.dart';
 
 class OpenAndDownloadImages extends StatelessWidget {
   const OpenAndDownloadImages({
@@ -49,11 +50,12 @@ class OpenAndDownloadImages extends StatelessWidget {
                         showNotification: true,
                         openFileFromNotification: true,
                       );
-
-                      Get.snackbar(
-                          'Success', 'Image saved to Downloads folder!');
                     } catch (e) {
-                      Get.snackbar('Error', 'Failed to save image');
+                      Get.snackbar(
+                        'Error',
+                        'Failed to save image',
+                        colorText: Colors.red,
+                      );
                     }
                   },
                 ),
@@ -72,10 +74,20 @@ class OpenAndDownloadImages extends StatelessWidget {
         height: 300,
         fit: BoxFit.cover,
         imageUrl: article.urlToImage!,
-        placeholder: (context, url) => const Center(
-          child: CircularProgressIndicator(),
+        placeholder: (context, url) => Center(
+          child: Shimmer.fromColors(
+            baseColor: Colors.grey.shade800,
+            highlightColor: Colors.grey.shade600,
+            child: Icon(
+              Icons.broken_image_rounded,
+              size: 60,
+            ),
+          ),
         ),
-        errorWidget: (context, url, error) => const Icon(Icons.error),
+        errorWidget: (context, url, error) => const Icon(
+          Icons.broken_image_rounded,
+          size: 60,
+        ),
       ),
     );
   }
