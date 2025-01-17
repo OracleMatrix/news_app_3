@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:news_app_3_update/app/data/Constants/api_key.dart';
 import 'package:news_app_3_update/app/data/Constants/base_url.dart';
@@ -13,47 +12,15 @@ class GetAllNewsApiService extends GetConnect {
 
       if (response.status.isOk) {
         return getAllNewsModelFromJson(response.bodyString!);
-      } else if (response.status.isForbidden) {
-        Get.snackbar(
-          'Error',
-          '${response.body?['message'] ?? response.statusText}',
-          colorText: Colors.red,
-        );
-      } else if (response.status.isNotFound) {
-        Get.snackbar(
-          'Error',
-          '${response.body?['message'] ?? response.statusText}',
-          colorText: Colors.red,
-        );
-      } else if (response.status.isUnauthorized) {
-        Get.snackbar(
-          duration: const Duration(seconds: 5),
-          'Error',
-          '${response.body?['message'] ?? response.statusText}',
-          colorText: Colors.red,
-        );
-      } else if (response.status.isServerError) {
-        Get.snackbar(
-          duration: const Duration(seconds: 5),
-          'Error',
-          '${response.body?['message'] ?? response.statusText}',
-          colorText: Colors.red,
-        );
       } else if (response.status.hasError) {
-        Get.snackbar(
-          duration: const Duration(seconds: 5),
-          'Error',
-          '${response.body?['message'] ?? 'Something went wrong\nPlease check your internet connection'}',
-          colorText: Colors.red,
-        );
+        throw "Something went wrong\nPlease try again later or check your internet connection";
+      } else if (response.status.isServerError) {
+        throw 'The server is busy\nPlease try again later';
+      } else if (response.status.isNotFound) {
+        throw "Your request not found\nPlease try something else";
       } else {
-        Get.snackbar(
-          'Error',
-          'Something went wrong',
-          duration: const Duration(seconds: 5),
-        );
+        throw "Something went wrong\nPlease check your internet connection and try again";
       }
-      return null;
     } catch (e) {
       rethrow;
     }

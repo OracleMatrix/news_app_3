@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_final_fields
 
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:news_app_3_update/app/data/Models/get_all_news_model.dart';
@@ -34,7 +35,7 @@ class HomeController extends GetxController {
         allData.value = data;
       }
     } catch (e) {
-      Get.snackbar('Error', e.toString());
+      Get.snackbar('Error', e.toString(), colorText: Colors.red);
     } finally {
       _isLoading.value = false;
     }
